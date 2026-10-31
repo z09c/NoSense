@@ -1,0 +1,55 @@
+{
+  "name": "nonsense",
+  "version": "0.1.0",
+  "description": "NoSense - 桌面右侧竖条通知助手 (Windows 10 1904+)",
+  "main": "main/main.js",
+  "author": "NoSense",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "dist": "electron-builder --win",
+    "rebuild-cache": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.nonsense.desktop",
+    "productName": "NoSense",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main/**/*",
+      "preload/**/*",
+      "renderer/**/*",
+      "resources/**/*"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0"
+  }
+}

@@ -1,0 +1,90 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+body {
+  font-family: "等线", "DengXian", "Microsoft YaHei UI", sans-serif;
+  color: #1c2027; font-size: 12pt;
+  -webkit-user-select: none; user-select: none;
+  background: transparent;
+}
+
+#root {
+  position: absolute; inset: 0;
+  display: flex;
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, rgba(255,255,255,0) 2px 4px),
+    linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.7));
+}
+
+/* 左侧菜单 */
+#menu {
+  flex: 0 0 168px;
+  border-right: 1px solid rgba(28,32,39,.14);
+  padding: 12px 10px;
+  display: flex; flex-direction: column; gap: 2px;
+  background: rgba(255,255,255,.42);
+}
+.brand { display: flex; align-items: baseline; gap: 6px; padding: 4px 8px 12px; }
+.brand b { font-size: 14pt; font-weight: 700; }
+.brand span { font-size: 11px; color: #5b6472; }
+.item {
+  padding: 8px 10px; border-radius: 10px; cursor: pointer; font-size: 12pt;
+  transition: background .12s linear;
+}
+.item:hover { background: rgba(47,111,237,.12); }
+.item.active { background: #2f6fed; color: #fff; }
+.item.danger:hover { background: rgba(217,115,13,.16); }
+.sep { height: 8px; }
+.foot { margin-top: auto; font-size: 11px; color: #5b6472; padding: 6px 8px; }
+
+/* 右侧内容 */
+#page { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+header {
+  height: 46px; display: flex; align-items: center;
+  padding: 0 14px; border-bottom: 1px solid rgba(28,32,39,.12);
+  font-size: 18pt; font-weight: 700; line-height: 1.25;
+}
+#win-close {
+  margin-left: auto; border: none; background: transparent; cursor: pointer;
+  font-size: 14px; color: #5b6472; padding: 4px 8px; border-radius: 8px;
+}
+#win-close:hover { background: rgba(217,115,13,.18); color: #1c2027; }
+#content { flex: 1 1 auto; overflow-y: auto; padding: 14px; }
+#content::-webkit-scrollbar { width: 9px; }
+#content::-webkit-scrollbar-thumb { background: rgba(28,32,39,.18); border-radius: 8px; }
+
+h3 { font-size: 13pt; margin: 14px 0 8px; color: #33405a; font-weight: 700; }
+h3:first-child { margin-top: 0; }
+.row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.row > label { flex: 0 0 108px; color: #5b6472; font-size: 12px; }
+.row .hint { font-size: 11px; color: #7a8494; }
+.row .spin-pair { flex: 1 1 auto; min-width: 0; }
+.row input[type=text] { flex: 1 1 auto; max-width: 300px; }
+input[type=text], input[type=number] {
+  border: 1px solid rgba(28,32,39,.2); border-radius: 8px; padding: 5px 8px;
+  font-size: 12px; background: rgba(255,255,255,.9); outline: none; min-width: 90px;
+}
+input:focus { border-color: #2f6fed; }
+.btn {
+  border: 1px solid rgba(28,32,39,.18); background: rgba(255,255,255,.85);
+  border-radius: 9px; padding: 5px 12px; font-size: 12px; cursor: pointer;
+}
+.btn:hover { background: #fff; }
+.btn.primary { background: #2f6fed; border-color: #2f6fed; color: #fff; }
+.btn.danger { background: #d9730d; border-color: #d9730d; color: #fff; }
+.kv { display: grid; grid-template-columns: 96px 1fr; gap: 4px 10px; font-size: 12px; }
+.kv b { color: #5b6472; font-weight: 400; }
+.sw { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.wheel {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 1px solid rgba(28,32,39,.18); border-radius: 10px; padding: 2px 4px;
+  background: rgba(255,255,255,.8);
+}
+.wheel button { border: none; background: transparent; cursor: pointer; font-size: 11px; padding: 2px 6px; border-radius: 6px; color: #33405a; }
+.wheel button:hover { background: rgba(47,111,237,.16); }
+.wheel .num { min-width: 34px; text-align: center; font-size: 15px; font-variant-numeric: tabular-nums; }
+.wheel .unit { font-size: 11px; color: #7a8494; }
+.spin-pair { display: flex; gap: 8px; align-items: center; }
+.logline { font-size: 11px; font-family: Consolas, monospace; color: #33405a; padding: 3px 0; border-bottom: 1px dashed rgba(28,32,39,.12); word-break: break-all; }
+.logline.error { color: #b3261e; }
+.logline.warn { color: #d9730d; }
+.note { font-size: 11px; color: #7a8494; line-height: 1.6; margin-top: 8px; }

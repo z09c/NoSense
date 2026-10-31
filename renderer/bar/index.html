@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>NoSense</title>
+  <link rel="stylesheet" href="bar.css">
+</head>
+<body data-mode="idle" data-dnd="0">
+  <div id="root">
+    <div id="card">
+      <div id="content">
+        <div class="head">
+          <span id="band">上午</span>
+          <span id="stamp">--:--</span>
+        </div>
+        <div id="title">NoSense</div>
+        <div id="rows"></div>
+        <div id="actions"></div>
+      </div>
+      <div id="menu">
+        <div class="row"><label>时段</label><span class="val" id="m-band">--</span></div>
+        <div class="row"><label>时间</label><span class="val" id="m-time">--:--</span></div>
+        <div class="row"><button class="btn primary" id="m-settings">设置</button></div>
+      </div>
+    </div>
+    <div id="chip">设置</div>
+  </div>
+  <script src="bar.js"></script>
+</body>
+</html>

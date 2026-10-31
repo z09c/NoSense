@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>NoSense 设置</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div id="root">
+    <aside id="menu">
+      <div class="brand"><b>NoSense</b><span id="ver">v0.1.0</span></div>
+      <div class="item active" data-page="about">关于</div>
+      <div class="item" data-page="dnd">免打扰</div>
+      <div class="item" data-page="data">数据与外观</div>
+      <div class="item" data-page="logs">日志</div>
+      <div class="sep"></div>
+      <div class="item danger" data-page="restart">重启软件</div>
+      <div class="item danger" data-page="quit">关闭软件</div>
+      <div class="foot" id="dnd-flag"></div>
+    </aside>
+    <main id="page">
+      <header>
+        <span id="page-title">关于</span>
+        <button id="win-close" title="关闭设置">✕</button>
+      </header>
+      <section id="content"></section>
+    </main>
+  </div>
+  <script src="settings.js"></script>
+</body>
+</html>

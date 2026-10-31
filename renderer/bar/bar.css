@@ -1,0 +1,218 @@
+'use strict';
+
+/**
+ * 渲染层：右侧竖条 + 展开后的消息卡片 + 按钮容器。
+ * 背景按规格为「50% 白 + 50% 毛玻璃」叠加。
+ */
+
+body, html {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  overflow: hidden; background: transparent;
+  -webkit-user-select: none; user-select: none; cursor: default;
+}
+
+:root {
+  --glass: rgba(255, 255, 255, .5);
+  --glass-2: rgba(255, 255, 255, .72);
+  --ink: #1c2027;
+  --ink-2: #5b6472;
+  --line: rgba(28, 32, 39, .14);
+  --accent: #2f6fed;
+  --warn: #d9730d;
+  --radius: 14px;
+}
+
+#root {
+  position: absolute; inset: 0;
+  font-family: "等线", "DengXian", "Microsoft YaHei UI", sans-serif;
+  color: var(--ink);
+}
+
+/* ---------- 卡片容器：圆角矩形 + 白/毛玻璃叠加 ---------- */
+#card {
+  position: absolute; inset: 0;
+  border-radius: var(--radius);
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, rgba(255,255,255,0) 2px 4px),
+    linear-gradient(180deg, var(--glass-2), var(--glass));
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, .75);
+  box-shadow: 0 10px 30px rgba(20, 25, 40, .18), inset 0 0 0 1px rgba(255,255,255,.25);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(14px);
+  transition: opacity .18s linear, transform .18s linear;
+}
+
+/* 收起状态：与卡片同一套白色玻璃语言，只用一条渐变细线做提示 */
+body[data-mode="idle"] #card {
+  opacity: 1;
+  transform: none;
+  left: var(--bar-margin, 12px);
+  right: var(--bar-margin, 12px);
+  border-radius: 7px;
+  background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.58));
+  border: 1px solid rgba(255,255,255,.85);
+  box-shadow: 0 4px 16px rgba(20, 25, 40, .16), inset 0 0 0 1px rgba(255,255,255,.3);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+body[data-mode="idle"] #card::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 18%;
+  width: 2px; height: 64%;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #2f6fed, #16b2a3);
+  opacity: .85;
+}
+body[data-dnd="1"][data-mode="idle"] #card {
+  background: linear-gradient(180deg, rgba(240,241,244,.86), rgba(222,225,231,.6));
+}
+body[data-dnd="1"][data-mode="idle"] #card::after {
+  background: linear-gradient(180deg, #8b93a1, #b8bec8);
+}
+body[data-mode="idle"]:hover #card {
+  box-shadow: 0 6px 20px rgba(20, 25, 40, .22), inset 0 0 0 1px rgba(255,255,255,.4);
+}
+
+body[data-mode="msg"] #card,
+body[data-mode="menu"] #card {
+  opacity: 1;
+  transform: none;
+}
+
+
+#content {
+  position: absolute; inset: 0;
+  padding: 12px 14px 10px 12px;
+  display: flex; flex-direction: column;
+  opacity: 0;
+  transition: opacity .16s linear .06s;
+}
+
+body[data-mode="msg"] #content, body[data-mode="menu"] #content { opacity: 1; }
+/* idle 时必须彻底隐藏内容层：它的最小宽度会把窗口顶到 32px，竖条收不回 8px */
+body[data-mode="idle"] #content { display: none; }
+/* 悬停菜单模式：只显示设置入口，不叠加消息内容 */
+body[data-mode="menu"] #content { display: none; }
+body[data-mode="menu"] #chip { display: none; }
+body[data-mode="menu"] #card { border-radius: 12px; }
+
+.head { display: flex; align-items: center; gap: 8px; }
+#title {
+  margin-top: 3px;
+  font-size: 18pt;
+  font-weight: 700;
+  letter-spacing: .5px;
+  line-height: 1.25;
+  word-break: break-word;
+}
+#stamp { font-size: 10pt; color: var(--ink-2); margin-left: auto; white-space: nowrap; }
+#band {
+  font-size: 10px; color: #fff; background: var(--accent);
+  border-radius: 999px; padding: 1px 7px; line-height: 15px;
+}
+#band.warn { background: var(--warn); }
+
+/* ---------- 内容行：问候 / 一言 / 叮嘱 / 天气 / 热点 各占一行 ---------- */
+#rows {
+  margin-top: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 12pt;
+  line-height: 1.5;
+}
+.line {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 2px 0;
+}
+.line + .line { border-top: 1px solid rgba(28,32,39,.07); }
+.line .tag {
+  flex: 0 0 auto;
+  font-size: 9pt;
+  color: #5b6472;
+  background: rgba(47,111,237,.10);
+  border-radius: 5px;
+  padding: 0 5px;
+  line-height: 17px;
+  min-width: 26px;
+  text-align: center;
+}
+.line .txt {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ink);
+  word-break: break-word;
+}
+.line.quote .txt { color: #33405a; }
+.line.weather .txt, .line.hot .txt { font-size: 11pt; color: #404a5c; }
+.line.hot .txt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- 按钮容器（圆角矩形） ---------- */
+#actions {
+  margin-top: auto;
+  display: flex; gap: 8px; align-items: center;
+  padding-top: 8px;
+}
+.btn {
+  appearance: none; border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .78);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background .12s linear, transform .08s linear;
+}
+.btn:hover { background: #fff; }
+.btn:active { transform: scale(.96); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: #2a63d8; }
+.btn.ghost { background: transparent; }
+.btn.mini { padding: 3px 9px; font-size: 11px; border-radius: 8px; }
+.btn.grow { margin-left: auto; }
+
+#hotline {
+  font-size: 11px; color: var(--ink-2);
+  border-top: 1px dashed var(--line);
+  padding-top: 5px; margin-top: 6px;
+  display: flex; gap: 6px; align-items: center;
+}
+#hottext { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#hotline .btn { flex: 0 0 auto; }
+
+/* 悬停竖条时弹出的设置按钮 */
+#chip {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%) scale(.9);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .86);
+  backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, .8);
+  box-shadow: 0 6px 18px rgba(20, 25, 40, .2);
+  padding: 4px 10px;
+  font-size: 12px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .12s linear, transform .12s linear;
+  white-space: nowrap;
+}
+#chip.show { opacity: 1; pointer-events: auto; transform: translateY(-50%) scale(1); }
+
+#menu { position: absolute; inset: 0; display: none; padding: 9px 10px; }
+body[data-mode="menu"] #menu { display: block; }
+
+.row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+.row:last-child { border-bottom: none; }
+.row label { font-size: 12px; color: var(--ink-2); min-width: 62px; }
+#menu .row label { min-width: 34px; }
+.row .val { font-size: 12px; color: var(--ink); }
